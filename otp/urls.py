@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     (r'^logout$', logout),
     (r'^register$', register),
     (r'^onetime$', onetime),
+    (r'^onetime_login$', onetime_login),
     (r'^modify_account$', modify_account),
     (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/'.join([os.path.dirname(__file__), 'static'])}),
 

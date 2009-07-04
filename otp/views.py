@@ -5,12 +5,13 @@ from django.shortcuts import render_to_response
 from django.contrib import auth
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 from captcha.fields import CaptchaField
 
 from otp.models import UserService
 
-RPC_SERVER_HOST = "http://192.168.1.5/"
+RPC_SERVER_HOST = "http://192.168.1.5:8080/"
 SECRET_PAGE = "/secret-page" # URL of secret page
 ERROR_MESSAGE = "The username and password don't seem to match. Try again."
 
@@ -58,7 +59,7 @@ class MessageGatewayMock:
             },
         ]
 
-rpc_gateway = MessageGatewayMock(RPC_SERVER_HOST)
+rpc_gateway = MessageGateway(RPC_SERVER_HOST)
 
 ADAPTERS = []
 SERVICES = []
@@ -116,17 +117,40 @@ def onetime(request):
     form = PassAdapterForm(request.POST)
 
     if form.is_valid():
+        username   = request.session['username']
+        service_id = request.POST.get('adapter')
+
+        user_param = UserService.objects.get(
+            user = User.objects.get(username=username),
+            service_id = service_id,
+        )
+        param = {'to': user_param.params}
+        password = rpc_gateway.send_id(service_id, param)
+
+        if not password:
+            raise BackendError()
+
+        request.session['password'] = password
+
         form = OneTimePassForm()
         return render_to_response('onetime-login.html', {'form' : form})
 
     return render_to_response('choose-adapter.html', {'form' : form})
 
 def onetime_login(request):
-    post = request.method == 'POST'
-    if not post or not request.POST.get('password', ''):
+    post   = request.method == 'POST'
+    passwd = request.POST.get('password')
+    if not post or not passwd:
         return HttpResponseRedirect('/')
 
-    return auth_user(username, password, request)
+    if passwd == request.session['password']:
+        username = request.session['username']
+        user = User.objects.get(username=username)
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        auth.login(request, user)
+        return HttpResponseRedirect(SECRET_PAGE)
+
+    return HttpResponseRedirect('/')
 
 def logout(request):
     auth.logout(request)
