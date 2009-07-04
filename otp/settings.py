@@ -75,6 +75,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'captcha',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

@@ -1,3 +1,0 @@
-[submodule "captcha"]
-	path = captcha
-	url = git://github.com/igstan/django-simple-captcha.git
