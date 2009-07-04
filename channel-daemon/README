@@ -1,0 +1,13 @@
+
+Small message gateway daemon
+----------------------------
+
+Can be called using XMLRPC and can send messages using multiple channels:
+email(smtp), im
+
+Requirements
+------------
+
+python xmlrpclib 
+python-xmpp
+
