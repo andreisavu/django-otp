@@ -16,7 +16,11 @@ def gen_id(n):
     return ''.join([random.choice(d) for x in range(1,n)])
 
 def send_with_id(channel, params):
-    return send(channel, "Your one time password is: %s" % gen_id(settings.PASWD_LENGTH), params)    
+    id = gen_id(settings.PASWD_LENGTH)
+    msg = "Your one time password is: %s" % id
+    if not send(channel, msg, params):
+        return False
+    return id
 
 def send(channel, msg, params):
     if channel == 'smtp':
