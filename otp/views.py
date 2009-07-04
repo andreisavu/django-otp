@@ -4,8 +4,19 @@ from django.contrib import auth
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
+from captcha.fields import CaptchaField
+
 SECRET_PAGE = "/secret-page" # URL of secret page
 ERROR_MESSAGE = "The username and password don't seem to match. Try again."
+ADAPTERS = (
+    ('email', 'Email'),
+    ('sms', 'SMS'),
+    ('im', 'IM'),
+)
+
+class PassAdapterForm(forms.Form):
+    adapter = forms.ChoiceField(choices=ADAPTERS, label="Send password by")
+    captcha = CaptchaField()
 
 def home(request):
     if request.user.is_authenticated():
@@ -17,7 +28,13 @@ def login(request):
     if request.method == 'GET':
         return HttpResponseRedirect('/')
     else:
-        username = request.POST.get('username','')
+        username = request.POST.get('username', '')
+
+        if request.POST.get('onetime', ''):
+            request.session['username'] = username
+            form = PassAdapterForm()
+            return render_to_response('choose-adapter.html', {'form' : form})
+
         password = request.POST.get('password', '')
 
         user = auth.authenticate(username=username, password=password)

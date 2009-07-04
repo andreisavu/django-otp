@@ -12,6 +12,8 @@ urlpatterns = patterns('',
     (r'^login$', login),
     (r'^logout$', logout),
     (r'^register$', register),
+    url(r'^captcha/', include('captcha.urls')),
+
     # Example:
     # (r'^otp/', include('otp.foo.urls')),
 
