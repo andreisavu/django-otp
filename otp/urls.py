@@ -2,6 +2,8 @@ from django.conf.urls.defaults import *
 
 from otp.views import *
 
+import os
+
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
@@ -13,6 +15,7 @@ urlpatterns = patterns('',
     (r'^logout$', logout),
     (r'^register$', register),
     (r'^onetime$', onetime),
+    (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/'.join([os.path.dirname(__file__), 'static'])}),
 
     url(r'^captcha/', include('captcha.urls')),
 
