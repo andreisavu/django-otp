@@ -21,6 +21,15 @@ class PassAdapterForm(forms.Form):
 class OneTimePassForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput(render_value=False))
 
+def auth_user(username, password):
+    user = auth.authenticate(username=username, password=password)
+
+    if user is not None and user.is_active:
+        auth.login(request, user)
+        return HttpResponseRedirect(SECRET_PAGE)
+    else:
+        return render_to_response('home.html', {'error_message' : ERROR_MESSAGE})
+
 def home(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect(SECRET_PAGE)
@@ -40,13 +49,7 @@ def login(request):
 
         password = request.POST.get('password', '')
 
-        user = auth.authenticate(username=username, password=password)
-
-        if user is not None and user.is_active:
-            auth.login(request, user)
-            return HttpResponseRedirect(SECRET_PAGE)
-        else:
-            return render_to_response('home.html', {'error_message' : ERROR_MESSAGE})
+        return auth_user(username, password)
 
 def onetime(request):
     post = request.method == 'POST'
