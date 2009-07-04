@@ -8,15 +8,14 @@ Implemented send methods:
 """
 
 from SimpleXMLRPCServer import SimpleXMLRPCServer
-import settings, sys
+import settings, generator, sys
 
-def gen_id(n):
-    d = '1234567890'
-    import random
-    return ''.join([random.choice(d) for x in range(1,n)])
-
-def send_with_id(channel, params):
-    return send(channel, "Your one time password is: %s" % gen_id(settings.PASWD_LENGTH), params)    
+def send_id(channel, params):
+    id = generator.id(channel)
+    msg = "Your one time password is: %s" % id
+    if not send(channel, msg, params):
+        return False
+    return id
 
 def send(channel, msg, params):
     if channel == 'smtp':
@@ -33,6 +32,14 @@ def send_smtp(msg, params):
         text=msg)
     return True
 
+def get_channels():
+    return [{
+        'id':'smtp',
+        'name':'Email',
+        'description':'Use an email address for receiving the password',
+        'params':{'to':'Adresa'}
+        }]
+
 def main(argv):
     port = 8000
     if len(argv) > 1:
@@ -42,7 +49,8 @@ def main(argv):
     server.register_introspection_functions()
     
     server.register_function(send, 'send')
-    server.register_function(send_with_id, 'send_with_id')
+    server.register_function(send_id, 'send_id')
+    server.register_function(get_channels, 'get_channels')
 
     print "Starting server on port %d ..." % port
     try:
