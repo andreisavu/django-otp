@@ -41,12 +41,20 @@ class MessageGatewayMock:
         return "12345"
 
     def get_channels(self):
-        return [{
-            'id':'smtp',
-            'name':'Email',
-            'description':'Use an email address for receiving the password',
-            'params':{'to':'Adresa'}
-            }]
+        return [
+            {
+                'id':'smtp',
+                'name':'Email',
+                'description':'Use an email address for receiving the password',
+                'params':{'to':'Adresa'}
+            },
+            {
+                'id':'sms',
+                'name':'SMS',
+                'description':'Use a phone number to receive the password via SMS',
+                'params':{'to':'Phone Number'}
+            },
+        ]
 
 rpc_gateway = MessageGatewayMock(RPC_SERVER_HOST)
 
