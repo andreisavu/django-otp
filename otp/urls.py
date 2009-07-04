@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 
-from otp.views import home
+from otp.views import *
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -8,6 +8,9 @@ from otp.views import home
 
 urlpatterns = patterns('',
     (r'^$', home),
+    (r'^secret-page$', secret_page),
+    (r'^login$', login),
+    (r'^logout$', logout),
     # Example:
     # (r'^otp/', include('otp.foo.urls')),
 
