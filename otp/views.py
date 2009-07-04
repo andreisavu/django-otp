@@ -11,11 +11,6 @@ from captcha.fields import CaptchaField
 RPC_SERVER_HOST = "http://192.168.1.5/"
 SECRET_PAGE = "/secret-page" # URL of secret page
 ERROR_MESSAGE = "The username and password don't seem to match. Try again."
-ADAPTERS = (
-    ('email', 'Email'),
-    ('sms', 'SMS'),
-    ('im', 'IM'),
-)
 
 class MessageGateway:
 
@@ -52,6 +47,14 @@ class MessageGatewayMock:
             'description':'Use an email address for receiving the password',
             'params':{'to':'Adresa'}
             }]
+
+rpc_gateway = MessageGatewayMock(RPC_SERVER_HOST)
+
+ADAPTERS = []
+
+for channel in rpc_gateway.get_channels():
+    ADAPTERS.append((channel['id'], channel['description']))
+
 
 class PassAdapterForm(forms.Form):
     adapter = forms.ChoiceField(choices=ADAPTERS, label="Send password by")
@@ -103,6 +106,13 @@ def onetime(request):
         return render_to_response('onetime-login.html', {'form' : form})
 
     return render_to_response('choose-adapter.html', {'form' : form})
+
+def onetime_login(request):
+    post = request.method == 'POST'
+    if not post or not request.POST.get('password', ''):
+        return HttpResponseRedirect('/')
+
+    return auth_user(username, password, request)
 
 def logout(request):
     auth.logout(request)
