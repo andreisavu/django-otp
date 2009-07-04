@@ -13,7 +13,7 @@ __author__ = 'Andrei Savu <contact@andreisavu.ro>'
 
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 import settings, generator
-import sys,os,xmpp,time
+import sys, os, time
 
 def send_id(channel, params):
     """
@@ -52,6 +52,8 @@ def send(channel, msg, params):
         return send_im(msg, params)
     elif channel == 'sms':
         return send_sms(msg, params)
+    elif channel == 'twitter':
+        return send_twitter(msg, params)
     return False
 
 def send_smtp(msg, params):
@@ -84,6 +86,7 @@ def send_im(msg, params):
     Returns:
         True or False
     """
+    import xmpp
     jid = xmpp.protocol.JID(settings.XMPP['jid'])
     cl = xmpp.Client(jid.getDomain(),debug=[])
     con = cl.connect()
@@ -117,6 +120,21 @@ def send_sms(msg, params):
         return False
     return True
 
+def send_twitter(msg, params):
+    """
+    Send a Direct Message on Twitter
+    
+    Parameters:
+        msg     - text message < less than 140 chars
+        params  - to: destination username
+
+    Returns:
+        True or False
+    """
+    import twitter
+    api = twitter.Api(username=settings.TWITTER['user'], password=settings.TWITTER['passwd'])
+    return api.PostDirectMessage(params['to'], msg)
+
 def get_channels():
     """
     Get a list of all available channels with some extra
@@ -130,13 +148,18 @@ def get_channels():
         },{
         'id':'im',
         'name':'Jabber/XMPP',
-        'description':'Use a jabber/IM account',
+        'description':'Use a jabber/IM account. Add as a friend our-bot@jabber',
         'params':{'to':'Account'}
         },{
         'id':'sms',
         'name':'Phone SMS',
         'description':'Use mobile phone',
         'params':{'to':'Phone'}
+        },{
+        'id':'twitter',
+        'name':'Twitter Direct Message',
+        'description':'Send password using Twitter Direct Message. You need to follow our-bot',
+        'params':{'to':'Twitter Account'}
         }]
 
 def main(argv):

@@ -16,3 +16,8 @@ SMS = {
     'dev':'/dev/ttyACM0'
 }
 
+TWITTER = {
+    'user':'twitter-account',
+    'passwd':'twitter-password'
+}
+

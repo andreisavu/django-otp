@@ -10,4 +10,6 @@ Requirements
 
 python xmlrpclib 
 python-xmpp
+a phone with modem
+python-twitter
 
