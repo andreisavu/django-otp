@@ -1,11 +1,15 @@
 
 {% include 'header.tpl' %}
 
-<h1>Create an account</h1>
-
 <form action="/register" method="post">
-    {{ form.as_p }}
+<fieldset>
+    <legend>Account register</legend>
+<table>
+    {{ form.as_table }}
+</table>
     <input type="submit" value="Create Account">
+    or <a href="/login">authenticate</a>
+</fieldset>
 </form>
 
 {% include 'footer.tpl' %}
