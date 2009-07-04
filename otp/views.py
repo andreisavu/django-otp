@@ -33,6 +33,9 @@ def logout(request):
     return HttpResponseRedirect('/')
 
 def secret_page(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/')
+
     return render_to_response('secret-page.html')
 
 def register(request):
