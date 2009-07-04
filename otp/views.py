@@ -1,3 +1,5 @@
+import xmlrpclib as rpc
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.contrib import auth
@@ -6,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 from captcha.fields import CaptchaField
 
+RPC_SERVER_HOST = "http://192.168.1.5/"
 SECRET_PAGE = "/secret-page" # URL of secret page
 ERROR_MESSAGE = "The username and password don't seem to match. Try again."
 ADAPTERS = (
@@ -13,6 +16,42 @@ ADAPTERS = (
     ('sms', 'SMS'),
     ('im', 'IM'),
 )
+
+class MessageGateway:
+
+    def __init__(self, url):
+        self.url = url
+        self.server = rpc.ServerProxy(url)
+
+    def send(self, channel, msg, params):
+        return self.server.send(channel, msg, params)
+
+    def send_id(self, channel, params):
+        return self.server.send_id(channel, params)
+
+    def get_channels(self):
+        return self.server.get_channels()
+
+class MessageGatewayMock:
+
+    def __init__(self, url):
+        self.url = url
+
+    def send(self, channel, msg, params):
+        print "Send: %s, %s" % (channel, msg)
+        return True
+
+    def send_id(self, channel, params):
+        print "SendID: %s" % channel
+        return "12345"
+
+    def get_channels(self):
+        return [{
+            'id':'smtp',
+            'name':'Email',
+            'description':'Use an email address for receiving the password',
+            'params':{'to':'Adresa'}
+            }]
 
 class PassAdapterForm(forms.Form):
     adapter = forms.ChoiceField(choices=ADAPTERS, label="Send password by")
