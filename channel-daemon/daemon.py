@@ -8,15 +8,10 @@ Implemented send methods:
 """
 
 from SimpleXMLRPCServer import SimpleXMLRPCServer
-import settings, sys
-
-def gen_id(n):
-    d = '1234567890'
-    import random
-    return ''.join([random.choice(d) for x in range(1,n)])
+import settings, generator, sys
 
 def send_id(channel, params):
-    id = gen_id(settings.PASWD_LENGTH)
+    id = generator.id(channel)
     msg = "Your one time password is: %s" % id
     if not send(channel, msg, params):
         return False
