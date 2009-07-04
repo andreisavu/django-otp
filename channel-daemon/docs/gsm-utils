@@ -1,0 +1,7 @@
+
+http://securfox.wordpress.com/2009/03/30/how-to-configure-nagios-to-send-sms-to-your-mobile/ 
+
+$ sudo apt-get install gsm-utils 
+$ sudo ls -al /dev/ttyUSB*   or something like /dev/ttyACM* 
+$ sudo gsmsendsms -d /dev/ttyUSB0 +3299999999 “Nagios – Test SMS OK”
+

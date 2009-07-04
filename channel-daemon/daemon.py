@@ -13,7 +13,7 @@ import sys,os,xmpp,time
 
 def send_id(channel, params):
     id = generator.id(channel)
-    msg = "Your one time password is: %s" % id
+    msg = "OTP: %s" % id
     if not send(channel, msg, params):
         return False
     return id
@@ -23,6 +23,8 @@ def send(channel, msg, params):
         return send_smtp(msg, params)
     elif channel == 'im':
         return send_im(msg, params)
+    elif channel == 'sms':
+        return send_sms(msg, params)
     return False
 
 def send_smtp(msg, params):
@@ -48,17 +50,31 @@ def send_im(msg, params):
     cl.disconnect()
     return True
 
+def send_sms(msg, params):
+    from subprocess import Popen
+    command = ['/usr/bin/gsmsendsms', '-d', settings.SMS['dev'], params['to'], msg]
+    p = Popen(command)
+    code = p.wait()
+    if code != 0:
+        return False
+    return True
+
 def get_channels():
     return [{
         'id':'smtp',
         'name':'Email',
         'description':'Use an email address for receiving the password',
-        'params':{'to':'Adresa'}
+        'params':{'to':'Adress'}
         },{
         'id':'im',
         'name':'Jabber/XMPP',
         'description':'Use a jabber/IM account',
-        'params':{'to':'Username'}
+        'params':{'to':'Account'}
+        },{
+        'id':'sms',
+        'name':'Phone SMS',
+        'description':'Use mobile phone',
+        'params':{'to':'Phone'}
         }]
 
 def main(argv):

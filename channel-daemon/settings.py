@@ -12,3 +12,7 @@ XMPP = {
     'passwd':'your-password'
 }
 
+SMS = {
+    'dev':'/dev/ttyACM0'
+}
+
