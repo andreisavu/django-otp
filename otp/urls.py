@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     (r'^logout$', logout),
     (r'^register$', register),
     (r'^onetime$', onetime),
+    (r'^modify_account$', modify_account),
 
     url(r'^captcha/', include('captcha.urls')),
 

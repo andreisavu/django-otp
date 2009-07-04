@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Django OTP</title>
+</head>
+<body>
+
+<h1>Modify account</h1>
+
+<form action="/modify_account" method="post">
+    {{ form.as_p }}
+    {% for service in services %}
+        {% if service %}
+        <p>
+            <label>
+                {{ service.1 }}:
+                <input type="text" name="services">
+            </label>
+        </p>
+        {% endif %}
+    {% endfor %}
+    <p>
+        <input type="submit" value="Submit">
+    </p>
+</form>
+
+</body>
+</html>

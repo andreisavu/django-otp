@@ -8,6 +8,8 @@ from django.contrib.auth.forms import UserCreationForm
 
 from captcha.fields import CaptchaField
 
+from otp.models import UserService
+
 RPC_SERVER_HOST = "http://192.168.1.5/"
 SECRET_PAGE = "/secret-page" # URL of secret page
 ERROR_MESSAGE = "The username and password don't seem to match. Try again."
@@ -59,10 +61,11 @@ class MessageGatewayMock:
 rpc_gateway = MessageGatewayMock(RPC_SERVER_HOST)
 
 ADAPTERS = []
+SERVICES = []
 
 for channel in rpc_gateway.get_channels():
     ADAPTERS.append((channel['id'], channel['description']))
-
+    SERVICES.append(channel['id'])
 
 class PassAdapterForm(forms.Form):
     adapter = forms.ChoiceField(choices=ADAPTERS, label="Send password by")
@@ -70,6 +73,9 @@ class PassAdapterForm(forms.Form):
 
 class OneTimePassForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput(render_value=False))
+
+class ModifyAccountForm(forms.Form):
+    pass
 
 def auth_user(username, password, request):
     user = auth.authenticate(username=username, password=password)
@@ -142,4 +148,27 @@ def register(request):
         form = UserCreationForm()
     return render_to_response("register.html", {
         'form': form,
+    })
+
+def modify_account(request):
+    """
+    """
+    if request.method == 'POST' and request.POST['services']:
+        for service_index, service_param in enumerate(request.POST.getlist('services')):
+            if not service_param.strip():
+                continue
+
+            user_service = UserService(
+                user = request.user,
+                service_id = SERVICES[int(service_index)],
+                params = service_param,
+            )
+            user_service.save()
+
+        return HttpResponseRedirect('/modify_account')
+
+    form = ModifyAccountForm()
+    return render_to_response('modify-account.html', {
+        'form' : form,
+        'services' : ADAPTERS,
     })
