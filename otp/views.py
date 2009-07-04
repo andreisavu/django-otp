@@ -21,7 +21,7 @@ class PassAdapterForm(forms.Form):
 class OneTimePassForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput(render_value=False))
 
-def auth_user(username, password):
+def auth_user(username, password, request):
     user = auth.authenticate(username=username, password=password)
 
     if user is not None and user.is_active:
@@ -49,7 +49,7 @@ def login(request):
 
         password = request.POST.get('password', '')
 
-        return auth_user(username, password)
+        return auth_user(username, password, request)
 
 def onetime(request):
     post = request.method == 'POST'
