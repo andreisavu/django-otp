@@ -1,30 +1,31 @@
 {% include 'header.tpl' %}
 
 {% if error_message %}
-    <p>{{ error_message }}</p>
+<div class="error"> {{ error_message }}</div>
 {% endif %}
 
-<form action="/login" method="post">
+<form action="/login" method="post" style="width: 600px">
     <fieldset>
         <legend>Login</legend>
         <div>
-            <label for="username">
+            <label for="username" class="large">
                 Username:
-                <input type="text" name="username" id="username">
             </label>
+            <input type="text" class="title" name="username" id="username">
         </div>
         <div>
-            <label for="password">
+            <label for="password" class="large">
                 Password:
-                <input type="password" name="password" id="password">
             </label>
+            <input type="password" class="title" name="password" id="password">
             <label for="onetime">
                 <input type="checkbox" name="onetime" id="onetime">
                 one time password
             </label>
         </div>
         <div>
-            <input type="submit" value="Login">
+            <button type="submit" class="button positive">Login</button>
+            or <a href="/register">register a new account</a>
         </div>
     </fieldset>
 </form>
