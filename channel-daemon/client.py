@@ -16,3 +16,6 @@ class MessageGateway:
     def send_id(self, channel, params):
         return self.server.send_id(channel, params)
 
+    def get_channels(self):
+        return self.server.get_channels()
+

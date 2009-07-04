@@ -32,6 +32,14 @@ def send_smtp(msg, params):
         text=msg)
     return True
 
+def get_channels():
+    return [{
+        'id':'smtp',
+        'name':'Email',
+        'description':'Use an email address for receiving the password',
+        'params':{'to':'Adresa'}
+        }]
+
 def main(argv):
     port = 8000
     if len(argv) > 1:
@@ -42,6 +50,7 @@ def main(argv):
     
     server.register_function(send, 'send')
     server.register_function(send_id, 'send_id')
+    server.register_function(get_channels, 'get_channels')
 
     print "Starting server on port %d ..." % port
     try:
