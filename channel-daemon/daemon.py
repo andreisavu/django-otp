@@ -8,7 +8,8 @@ Implemented send methods:
 """
 
 from SimpleXMLRPCServer import SimpleXMLRPCServer
-import settings, generator, sys
+import settings, generator
+import sys,os,xmpp,time
 
 def send_id(channel, params):
     id = generator.id(channel)
@@ -20,7 +21,8 @@ def send_id(channel, params):
 def send(channel, msg, params):
     if channel == 'smtp':
         return send_smtp(msg, params)
-  
+    elif channel == 'im':
+        return send_im(msg, params)
     return False
 
 def send_smtp(msg, params):
@@ -32,12 +34,31 @@ def send_smtp(msg, params):
         text=msg)
     return True
 
+def send_im(msg, params):
+    jid = xmpp.protocol.JID(settings.XMPP['jid'])
+    cl = xmpp.Client(jid.getDomain(),debug=[])
+    con = cl.connect()
+    if not con:
+        return False
+    auth=cl.auth(jid.getNode(), settings.XMPP['passwd'], resource=jid.getResource())
+    if not auth:
+        return False
+    id=cl.send(xmpp.protocol.Message(params['to'], msg))
+    time.sleep(1)
+    cl.disconnect()
+    return True
+
 def get_channels():
     return [{
         'id':'smtp',
         'name':'Email',
         'description':'Use an email address for receiving the password',
         'params':{'to':'Adresa'}
+        },{
+        'id':'im',
+        'name':'Jabber/XMPP',
+        'description':'Use a jabber/IM account',
+        'params':{'to':'Username'}
         }]
 
 def main(argv):
