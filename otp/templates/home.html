@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Django OTP</title>
+<script type="text/javascript">
+var id = function (value) {
+    return document.getElementById(value);
+};
+
+window.onload = function () {
+    var onetime  = id("onetime");
+    var password = id("password");
+
+    onetime.onclick = function () {
+        password.disabled = onetime.checked;
+    };
+};
+</script>
+</head>
+<body>
+
+<h1>Django OTP</h1>
+
+{% if error_message %}
+    <p>{{ error_message }}</p>
+{% endif %}
+
+<form action="/login" method="post">
+    <fieldset>
+        <legend>Login</legend>
+        <div>
+            <label for="username">
+                Username:
+                <input type="text" name="username" id="username">
+            </label>
+        </div>
+        <div>
+            <label for="password">
+                Password:
+                <input type="password" name="password" id="password">
+            </label>
+            <label for="onetime">
+                <input type="checkbox" name="onetime" id="onetime">
+                one time password
+            </label>
+        </div>
+        <div>
+            <input type="submit" value="Login">
+        </div>
+    </fieldset>
+</form>
+
+</body>
+</html>
