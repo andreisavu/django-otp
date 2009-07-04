@@ -1,26 +1,4 @@
-<!DOCTYPE html>
-
-<html>
-<head>
-<title>Django OTP</title>
-<script type="text/javascript">
-var id = function (value) {
-    return document.getElementById(value);
-};
-
-window.onload = function () {
-    var onetime  = id("onetime");
-    var password = id("password");
-
-    onetime.onclick = function () {
-        password.disabled = onetime.checked;
-    };
-};
-</script>
-</head>
-<body>
-
-<h1>Django OTP</h1>
+{% include 'header.tpl' %}
 
 {% if error_message %}
     <p>{{ error_message }}</p>
@@ -51,5 +29,19 @@ window.onload = function () {
     </fieldset>
 </form>
 
-</body>
-</html>
+<script type="text/javascript">
+var id = function (value) {
+    return document.getElementById(value);
+};
+
+window.onload = function () {
+    var onetime  = id("onetime");
+    var password = id("password");
+
+    onetime.onclick = function () {
+        password.disabled = onetime.checked;
+    };
+};
+</script>
+
+{% include footer.tpl %}

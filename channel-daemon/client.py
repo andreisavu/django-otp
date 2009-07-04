@@ -4,7 +4,7 @@ Simple client for message gateway server
 
 import xmlrpclib as rpc
 
-class MessageGateway:
+class Client:
 
     def __init__(self, url):
         self.url = url
