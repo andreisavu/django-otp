@@ -15,7 +15,7 @@ def gen_id(n):
     import random
     return ''.join([random.choice(d) for x in range(1,n)])
 
-def send_with_id(channel, params):
+def send_id(channel, params):
     id = gen_id(settings.PASWD_LENGTH)
     msg = "Your one time password is: %s" % id
     if not send(channel, msg, params):
@@ -46,7 +46,7 @@ def main(argv):
     server.register_introspection_functions()
     
     server.register_function(send, 'send')
-    server.register_function(send_with_id, 'send_with_id')
+    server.register_function(send_id, 'send_id')
 
     print "Starting server on port %d ..." % port
     try:
