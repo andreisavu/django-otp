@@ -2,7 +2,21 @@
 
 <html>
 <head>
-    <title>Django OTP</title>
+<title>Django OTP</title>
+<script type="text/javascript">
+var id = function (value) {
+    return document.getElementById(value);
+};
+
+window.onload = function () {
+    var onetime  = id("onetime");
+    var password = id("password");
+
+    onetime.onclick = function () {
+        password.disabled = onetime.checked;
+    };
+};
+</script>
 </head>
 <body>
 
@@ -25,6 +39,10 @@
             <label for="password">
                 Password:
                 <input type="password" name="password" id="password">
+            </label>
+            <label for="onetime">
+                <input type="checkbox" name="onetime" id="onetime">
+                one time password
             </label>
         </div>
         <div>
