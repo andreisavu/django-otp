@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Django OTP</title>
+</head>
+<body>
+
+<form action="/onetime_login" method="post">
+    <fieldset>
+        <legend>Enter the password you received</legend>
+        {{ form.as_p }}
+        <input type="submit" value="Send">
+    </fieldset>
+</form>
+
+</body>
+</html>

@@ -18,6 +18,9 @@ class PassAdapterForm(forms.Form):
     adapter = forms.ChoiceField(choices=ADAPTERS, label="Send password by")
     captcha = CaptchaField()
 
+class OneTimePassForm(forms.Form):
+    password = forms.CharField(widget=forms.PasswordInput(render_value=False))
+
 def home(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect(SECRET_PAGE)
@@ -44,6 +47,20 @@ def login(request):
             return HttpResponseRedirect(SECRET_PAGE)
         else:
             return render_to_response('home.html', {'error_message' : ERROR_MESSAGE})
+
+def onetime(request):
+    post = request.method == 'POST'
+
+    if not post or not request.POST.get('adapter', ''):
+        return HttpResponseRedirect('/')
+
+    form = PassAdapterForm(request.POST)
+
+    if form.is_valid():
+        form = OneTimePassForm()
+        return render_to_response('onetime-login.html', {'form' : form})
+
+    return render_to_response('choose-adapter.html', {'form' : form})
 
 def logout(request):
     auth.logout(request)
