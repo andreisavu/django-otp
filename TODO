@@ -1,0 +1,9 @@
+
+1. Full rewrite:
+ - better error handling on server
+ - no hacks on django.contrib.auth
+
+2. Send code in image attached to email message
+
+3. Add at least some tests
+
