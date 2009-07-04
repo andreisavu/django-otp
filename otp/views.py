@@ -1,6 +1,8 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.contrib import auth
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
 
 SECRET_PAGE = "/secret-page" # URL of secret page
 ERROR_MESSAGE = "The username and password don't seem to match. Try again."
@@ -32,3 +34,15 @@ def logout(request):
 
 def secret_page(request):
     return render_to_response('secret-page.html')
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            new_user = form.save()
+            return HttpResponseRedirect(SECRET_PAGE)
+    else:
+        form = UserCreationForm()
+    return render_to_response("register.html", {
+        'form': form,
+    })

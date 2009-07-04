@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     (r'^secret-page$', secret_page),
     (r'^login$', login),
     (r'^logout$', logout),
+    (r'^register$', register),
     # Example:
     # (r'^otp/', include('otp.foo.urls')),
 
